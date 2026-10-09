@@ -1,0 +1,144 @@
+{
+  "tools": [
+    {
+      "name": "get_shipment",
+      "title": "Get shipment",
+      "description": "Look up a shipment's status, route, estimated delivery date and latest event by tracking number.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "tracking_no": {
+            "type": "string",
+            "pattern": "^KRV[0-9]{8}$",
+            "description": "Shipment tracking number: KRV followed by 8 digits, e.g. KRV12345678"
+          }
+        },
+        "required": [
+          "tracking_no"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "reschedule_delivery",
+      "title": "Reschedule delivery",
+      "description": "Move a shipment's delivery to a new date. Needs the last four digits of the recipient's phone as verification. The date must be between tomorrow and 14 days ahead; delivered, returned or out-for-delivery shipments cannot be rescheduled.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "tracking_no": {
+            "type": "string",
+            "pattern": "^KRV[0-9]{8}$",
+            "description": "Shipment tracking number: KRV followed by 8 digits, e.g. KRV12345678"
+          },
+          "new_date": {
+            "type": "string",
+            "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$",
+            "description": "New delivery date, YYYY-MM-DD"
+          },
+          "verification_code": {
+            "type": "string",
+            "pattern": "^[0-9]{4}$",
+            "description": "Last four digits of the recipient's phone number"
+          },
+          "reason": {
+            "description": "Why the customer wants a new date",
+            "type": "string"
+          }
+        },
+        "required": [
+          "tracking_no",
+          "new_date",
+          "verification_code"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "open_ticket",
+      "title": "Open support ticket",
+      "description": "Open a customer support ticket, optionally about a shipment (damaged, lost, delayed, or other).",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "tracking_no": {
+            "type": "string",
+            "pattern": "^KRV[0-9]{8}$",
+            "description": "Shipment tracking number: KRV followed by 8 digits, e.g. KRV12345678"
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "DAMAGED",
+              "LOST",
+              "DELAY",
+              "OTHER"
+            ],
+            "description": "Kind of problem"
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 2000,
+            "description": "What happened, in the customer's words"
+          }
+        },
+        "required": [
+          "category",
+          "description"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "search_help",
+      "title": "Search help articles",
+      "description": "Search the Kervan knowledge base and return the three best-matching help articles.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "maxLength": 500,
+            "description": "What the customer wants to know"
+          }
+        },
+        "required": [
+          "query"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    }
+  ]
+}
