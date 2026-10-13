@@ -1,5 +1,8 @@
 # kervan-mcp
 
+> Part of **[Kervan](https://github.com/onurkoocc/kervan-system)**, a fictional cargo company built as a
+> reference for backends where AI agents can safely act on a customer's behalf. Start there.
+
 The MCP resource server of Kervan, a fictional cargo company used as a reference
 system for Mandate's brownfield work. It exposes four customer tools over MCP
 Streamable HTTP and accepts only access tokens issued by `kervan-auth` for this
